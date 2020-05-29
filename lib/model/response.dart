@@ -4,14 +4,14 @@ import 'package:musicapp/model/audio.dart';
 
 class ItunesResponse {
     final int resultCount;
-    final List<Audio> results;
+    final List<MyAudio> results;
 
     ItunesResponse({this.resultCount, this.results});
 
     factory ItunesResponse.fromJson(Map<String, dynamic> json) {
         return ItunesResponse(
             resultCount: json['resultCount'], 
-            results: json['results'] != [] ? (json['results'] as List).map((i) => Audio.fromJson(i)).toList() : [],
+            results: json['results'] != [] ? (json['results'] as List).map((i) => MyAudio.fromJson(i)).toList() : [],
         );
     }
 

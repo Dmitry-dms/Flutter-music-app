@@ -48,15 +48,15 @@ class DBProvider {
           ''');
   }
 
-  newAudio(Audio newAudio) async {
+  newAudio(MyAudio newAudio) async {
     final db = await database;
     return await db.insert(table, newAudio.toJson());
   }
 
-  Future<List<Audio>> getAllAudio() async {
+  Future<List<MyAudio>> getAllAudio() async {
     final db = await database;
     var res = await db.query("Audio");
-    List<Audio> list = res.isNotEmpty ? res.map((c) => Audio.fromJson(c)).toList() : [];
+    List<MyAudio> list = res.isNotEmpty ? res.map((c) => MyAudio.fromJson(c)).toList() : [];
     return list;
   }
 }

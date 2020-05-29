@@ -6,7 +6,7 @@ class InitialState extends MusicListState{}
 class LoadingState extends MusicListState {}
 
 class Loaded extends MusicListState {
-  final List<Audio> musicList;
+  final List<MyAudio> musicList;
   Loaded({@required this.musicList});
 }
 

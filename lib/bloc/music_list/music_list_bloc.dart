@@ -11,7 +11,8 @@ part 'music_list_state.dart';
 
 
 class MusicListBloc extends Bloc<MusicListEvent, MusicListState> {
-  var repository = Repository.repository;
+  final repository = Repository.repository;
+  bool _isFirstLaunch = true;
   @override
   MusicListState get initialState => InitialState();
 
@@ -33,7 +34,7 @@ class MusicListBloc extends Bloc<MusicListEvent, MusicListState> {
           name = name.replaceAll(RegExp('^[0-9 -._]{1,5}'), '');
         }
         var audioFromApi = await repository.getAudioFromApi(name);
-        var audio = Audio(
+        var audio = MyAudio(
             id: (audioFromApi.id) == null ? name.hashCode : audioFromApi.id,
             imageUrl: audioFromApi.imageUrl,
             path: index.path,
@@ -43,9 +44,18 @@ class MusicListBloc extends Bloc<MusicListEvent, MusicListState> {
       yield Loaded(musicList: await repository.getAllAudio());
     }
     if (event is FetchFromDB){
+      print('fetch from db');
+      if (_isFirstLaunch) {
+        _isFirstLaunch = false;
+        yield LoadingState();
+
+        List<MyAudio> songs = await repository.getAllAudio();
+        yield Loaded(musicList: songs);
+      }
+    }
+    if (event is InitialState){
       yield LoadingState();
-      List<Audio> songs = await repository.getAllAudio();
-      yield Loaded(musicList: songs);
+      yield Loaded(musicList: await repository.getAllAudio());
     }
   }
 
