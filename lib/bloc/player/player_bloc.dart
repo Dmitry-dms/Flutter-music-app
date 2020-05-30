@@ -12,11 +12,12 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   final repository = Repository.repository;
   int _currentSongIndex;
   List<Audio> _playlist;
-  final _audioPLayer = AssetsAudioPlayer();
+  final audioPLayer = AssetsAudioPlayer();
   bool _isFirstLaunch = true;
   PlayerBloc() {
     add(FetchFromDbPlayerEvent());
   }
+  Duration get songDuration => (audioPLayer.current.value.audio.duration != null) ?  audioPLayer.current.value.audio.duration :Duration();
 
 
   @override
@@ -33,16 +34,26 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     }
     if (event is SendIndexPlayerEvent) {
       _currentSongIndex = event.audioIndex;
-      print(_playlist[_currentSongIndex].metas.title);
+      if (audioPLayer.isPlaying.value){
+        audioPLayer.playlistPlayAtIndex(_currentSongIndex);
+      }
     }
     if (event is PlayOrPauseSongPlayerEvent) {
+
       if (_isFirstLaunch) {
-        _audioPLayer.open(Playlist(audios: _playlist),
+        audioPLayer.open(Playlist(audios: _playlist),
             autoStart: true, showNotification: true);
         _isFirstLaunch = false;
       } else {
-        _audioPLayer.playOrPause();
+        audioPLayer.playOrPause();
       }
+
+    }
+    if (event is NextSongPlayerEvent){
+      audioPLayer.next();
+    }
+    if (event is PreviousSongPlayerEvent){
+      audioPLayer.previous();
     }
   }
 }

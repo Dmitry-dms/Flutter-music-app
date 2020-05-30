@@ -3,10 +3,7 @@ import 'package:equatable/equatable.dart';
 abstract class PlayerEvent extends Equatable {
   const PlayerEvent();
 }
-class TestEvent extends PlayerEvent{
-  @override
-  List<Object> get props => null;
-}
+
 class FetchFromDbPlayerEvent extends PlayerEvent{
   @override
   List<Object> get props => null;
@@ -24,15 +21,16 @@ class PlayOrPauseSongPlayerEvent extends PlayerEvent{
   @override
   List<Object> get props => null;
 }
-class PauseSongPlayerEvent extends PlayerEvent{
-  @override
-  List<Object> get props => null;
-}
-class ForwardSongPlayerEvent extends PlayerEvent{
+
+class NextSongPlayerEvent extends PlayerEvent{
   @override
   List<Object> get props => null;
 }
 class PreviousSongPlayerEvent extends PlayerEvent{
+  @override
+  List<Object> get props => null;
+}
+class GetCurrentSongDurationPlayerEvent extends PlayerEvent{
   @override
   List<Object> get props => null;
 }

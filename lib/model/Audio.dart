@@ -1,5 +1,15 @@
 
-class Audio {
+import 'package:assets_audio_player/assets_audio_player.dart';
+
+Audio mapToAudio(MyAudio audio) {
+    return Audio.file(audio.path,
+    metas: Metas(
+        image: MetasImage.network(audio.imageUrl),
+        title: audio.name
+    ));
+}
+
+class MyAudio {
     final int id;
     final String imageUrl;
 
@@ -8,10 +18,10 @@ class Audio {
 
     final String name;
 
-    Audio({this.id,this.imageUrl='',this.path='',this.name=''});
+    MyAudio({this.id,this.imageUrl='',this.path='',this.name=''});
 
-    factory Audio.fromJson(Map<String, dynamic> json) {
-        return Audio(
+    factory MyAudio.fromJson(Map<String, dynamic> json) {
+        return MyAudio(
             id: json['artistId'],
             name: json['name'],
             path: json['path'],

@@ -14,7 +14,7 @@ class Player extends StatefulWidget {
 class _PlayerState extends State<Player> {
 
   bool _play = false;
-
+  double _currentMusicTime = 0.0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,12 +27,40 @@ class _PlayerState extends State<Player> {
         child: BlocBuilder<PlayerBloc, PlayerState>(
           bloc: context.bloc<PlayerBloc>(),
           builder: (context, state) {
-              return Center(
-                child: RaisedButton(
-                  onPressed: () {
-                    context.bloc<PlayerBloc>().add(PlayOrPauseSongPlayerEvent());
-                  },
-                  child: Text(_play ? 'stop' : 'play'),
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: <Widget>[
+                    StreamBuilder(
+                      stream: context.bloc<PlayerBloc>().audioPLayer.currentPosition,
+                      builder: (context, snapshot){
+                        Duration duration = snapshot.data;
+                          return StreamBuilder(
+                            stream: context.bloc<PlayerBloc>().audioPLayer.current,
+                            builder: (context, snapshot) {
+                              Playing songDuration = snapshot.data;
+                              if (songDuration != null) {
+                                return Slider(
+                                    value: duration.inSeconds.ceilToDouble(),
+                                    min: 0,
+                                    max: songDuration.audio.duration.inSeconds.ceilToDouble(),
+                                    onChanged: null
+                                );
+                              } else {
+                                return Text('music isn\'t playing');
+                              }
+                            }
+                          );
+                      },
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        context.bloc<PlayerBloc>().add(PlayOrPauseSongPlayerEvent());
+                      },
+                      child: Text(_play ? 'stop' : 'play'),
+                    ),
+                  ],
                 ),
               );
           },
