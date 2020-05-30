@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:musicapp/model/audio.dart';
+import 'package:musicapp/repository/database/moor/moor_database.dart';
 import 'package:musicapp/repository/repository.dart';
 
 part 'music_list_event.dart';
@@ -45,13 +46,22 @@ class MusicListBloc extends Bloc<MusicListEvent, MusicListState> {
     }
     if (event is FetchFromDB){
       print('fetch from db');
-      if (_isFirstLaunch) {
-        _isFirstLaunch = false;
-        yield LoadingState();
-
-        List<MyAudio> songs = await repository.getAllAudio();
-        yield Loaded(musicList: songs);
-      }
+//      if (_isFirstLaunch) {
+//        _isFirstLaunch = false;
+//        yield LoadingState();
+//
+//        List<MyAudio> songs = await repository.getAllAudio();
+//        yield Loaded(musicList: songs);
+//      }
+//      List<MyAudio2> list = await repository.getMoorAudios();
+//      print(list);
+      repository.insertAudio(MyAudio2(
+          id: 5,
+          name: 'check',
+          path: 'fdkkk/path',
+          url: 'www.picture.com'
+      ));
+      print('added');
     }
     if (event is InitialState){
       yield LoadingState();

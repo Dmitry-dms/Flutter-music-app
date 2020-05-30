@@ -4,6 +4,7 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bloc/bloc.dart';
 import 'package:musicapp/bloc/music_list/music_list_bloc.dart';
 import 'package:musicapp/model/audio.dart';
+import 'package:musicapp/repository/database/moor/moor_database.dart';
 import 'package:musicapp/repository/repository.dart';
 import './bloc.dart';
 
@@ -28,9 +29,15 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     PlayerEvent event,
   ) async* {
     if (event is FetchFromDbPlayerEvent) {
-      List<MyAudio> list = await repository.getAllAudio();
-      print(list);
-      _playlist = list.map((index) => mapToAudio(index)).toList();
+    //  List<MyAudio> list = await repository.getAllAudio();
+     // _playlist = list.map((index) => mapToAudio(index)).toList();
+      repository.insertAudio(MyAudio2(
+        id: 1,
+        name: 'Namedf',
+        path: 'fdkkk/path',
+        url: 'www.picture.com'
+      ));
+      print('added');
     }
     if (event is SendIndexPlayerEvent) {
       _currentSongIndex = event.audioIndex;
