@@ -4,7 +4,7 @@ import 'package:filesystem_picker/filesystem_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:musicapp/bloc/music_list/music_list_bloc.dart';
-import 'package:musicapp/bloc/player/bloc.dart';
+import 'package:musicapp/bloc/player/bloc_pl.dart';
 import 'package:musicapp/model/audio.dart';
 import 'package:musicapp/main.dart';
 
@@ -43,7 +43,7 @@ class MusicList extends StatelessWidget {
               onPressed: () async {
                 String dirPath = await _pickDir(context);
                 print(dirPath);
-                //_bloc.add(Fetch(dirPath: dirPath));
+                context.bloc<MusicListBloc>().add(Fetch(dirPath: dirPath));
               }, icon: Icon(Icons.add), label: Text('Folder'))
         ],
       ),

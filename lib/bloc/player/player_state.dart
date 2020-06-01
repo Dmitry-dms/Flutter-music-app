@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:musicapp/model/audio.dart';
 
+
+
 abstract class PlayerState extends Equatable {
   const PlayerState();
 }

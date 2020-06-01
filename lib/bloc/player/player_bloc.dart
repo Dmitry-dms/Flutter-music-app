@@ -1,12 +1,11 @@
 import 'dart:async';
+import 'dart:wasm';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:bloc/bloc.dart';
-import 'package:musicapp/bloc/music_list/music_list_bloc.dart';
 import 'package:musicapp/model/audio.dart';
-import 'package:musicapp/repository/database/moor/moor_database.dart';
 import 'package:musicapp/repository/repository.dart';
-import './bloc.dart';
+import 'bloc_pl.dart';
 
 class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
 
@@ -18,8 +17,6 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   PlayerBloc() {
     add(FetchFromDbPlayerEvent());
   }
-  Duration get songDuration => (audioPLayer.current.value.audio.duration != null) ?  audioPLayer.current.value.audio.duration :Duration();
-
 
   @override
   PlayerState get initialState => InitialPlayerState();
@@ -29,24 +26,25 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
     PlayerEvent event,
   ) async* {
     if (event is FetchFromDbPlayerEvent) {
-    //  List<MyAudio> list = await repository.getAllAudio();
-     // _playlist = list.map((index) => mapToAudio(index)).toList();
-      repository.insertAudio(MyAudio2(
-        id: 1,
-        name: 'Namedf',
-        path: 'fdkkk/path',
-        url: 'www.picture.com'
-      ));
-      print('added');
+      List<MyAudio> list = await repository.getMoorAudios();
+      _playlist = list.map((index) => mapToAudio(index)).toList();
+
     }
     if (event is SendIndexPlayerEvent) {
-      _currentSongIndex = event.audioIndex;
-      if (audioPLayer.isPlaying.value){
+
+      if (_isFirstLaunch) {
+        _currentSongIndex = event.props[0];
+        audioPLayer.open(Playlist(audios: _playlist),
+            autoStart: false, showNotification: true);
+        _isFirstLaunch = false;
+        audioPLayer.playlistPlayAtIndex(_currentSongIndex);
+      }
+      if (_currentSongIndex != event.props[0]) {
+        _currentSongIndex = event.props[0];
         audioPLayer.playlistPlayAtIndex(_currentSongIndex);
       }
     }
     if (event is PlayOrPauseSongPlayerEvent) {
-
       if (_isFirstLaunch) {
         audioPLayer.open(Playlist(audios: _playlist),
             autoStart: true, showNotification: true);
@@ -54,13 +52,20 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       } else {
         audioPLayer.playOrPause();
       }
-
     }
     if (event is NextSongPlayerEvent){
+      ++_currentSongIndex;
       audioPLayer.next();
     }
     if (event is PreviousSongPlayerEvent){
+      --_currentSongIndex;
       audioPLayer.previous();
     }
+    if (event is SeekToPlayerEvent){
+      int sec = (event.props[0] as double).round();
+      audioPLayer.seek(Duration(seconds: sec));
+    }
+
   }
+
 }

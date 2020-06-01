@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:moor/moor.dart';
 import 'package:moor_ffi/moor_ffi.dart';
+import 'package:musicapp/model/audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 part 'moor_database.g.dart';
@@ -18,11 +19,10 @@ LazyDatabase _openConnection() {
   });
 }
 
-@DataClassName('MyAudio2')
+@DataClassName('MyAudio')
 class Audios extends Table {
-  IntColumn get id => integer()();
   TextColumn get name => text().withLength(min: 1, max: 100)();
-  TextColumn get url => text().withLength(min: 1, max: 100)();
+  TextColumn get imageUrl => text().withLength(min: 0,max: 150)();
   TextColumn get path => text().withLength(min: 1, max: 100)();
 
   @override
@@ -44,8 +44,11 @@ class AudiosDao extends DatabaseAccessor<MoorDatabase> with _$AudiosDaoMixin {
   final MoorDatabase db;
   AudiosDao(this.db) : super(db);
 
-  Future<List<MyAudio2>> get allAudios => select(audios).get();
-  Stream<List<MyAudio2>> watchAudios() => select(audios).watch();
-  Future insertAudio(Insertable<MyAudio2> audio) => //into(audios).insert(audio);
+  Future<List<MyAudio>> get allAudios => select(audios).get();
+  Stream<List<MyAudio>> watchAudios() => select(audios).watch();
+  Future insertAudio(Insertable<MyAudio> audio) => //into(audios).insert(audio);
       into(audios).insert(audio,mode: InsertMode.insertOrIgnore);
+
+  Future<MyAudio> audioByName(String songName) => (select(audios)..where((n)=>n.name.equals(songName))).getSingle();
+
 }
