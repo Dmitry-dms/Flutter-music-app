@@ -31,6 +31,14 @@ class PreviousSongPlayerEvent extends PlayerEvent{
   @override
   List<Object> get props => null;
 }
+class LoopSongPlayerEvent extends PlayerEvent{
+  @override
+  List<Object> get props => null;
+}
+class ShuffleSongPlayerEvent extends PlayerEvent{
+  @override
+  List<Object> get props => null;
+}
 class SeekToPlayerEvent extends PlayerEvent{
   final double _time;
 

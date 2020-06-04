@@ -12,8 +12,11 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
   final repository = Repository.repository;
   int _currentSongIndex;
   List<Audio> _playlist;
+  List<Audio> _shuffledPlaylist;
   final audioPLayer = AssetsAudioPlayer();
   bool _isFirstLaunch = true;
+  bool _shuffle = false;
+  bool _loop = false;
   PlayerBloc() {
     add(FetchFromDbPlayerEvent());
   }
@@ -65,6 +68,18 @@ class PlayerBloc extends Bloc<PlayerEvent, PlayerState> {
       int sec = (event.props[0] as double).round();
       audioPLayer.seek(Duration(seconds: sec));
     }
+    if (event is LoopSongPlayerEvent){
+      audioPLayer.toggleLoop();
+    }
+//    if (event is ShuffleSongPlayerEvent) {
+//      _shuffle=!_shuffle;
+//      if (_shuffle) {
+//        _shuffledPlaylist = _playlist;
+//        _shuffledPlaylist.shuffle();
+//        audioPLayer.open(Playlist(audios: _shuffledPlaylist),showNotification: true, autoStart: false);
+//
+//      }
+//    }
 
   }
 
